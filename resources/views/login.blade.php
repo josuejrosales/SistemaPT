@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    LOGIN
+    LOGIN view (example)
     <form action="{{ route('LoginIn') }}" method="POST">
         @csrf
         <input type="text" name="email" value="{{ old('email') }}">
