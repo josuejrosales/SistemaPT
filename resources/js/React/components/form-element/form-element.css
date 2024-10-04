@@ -1,0 +1,87 @@
+form {
+    padding: 1.5rem;
+    width: 100vw;
+    max-width: 500px;
+}
+
+.form-body {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1.5rem;
+}
+
+.form-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1.4rem;
+    border: 0.5px solid rgba(255, 255, 255, 0.05);
+    padding: 1rem;
+    border-radius: 5px;
+}
+
+.form-section p {
+    color: gray;
+}
+
+.form-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-item label {
+    font-size: 1rem;
+    color: #dfdfdf;
+    margin-bottom: 0.5rem;
+    text-transform: capitalize;
+}
+
+.form-item .form-input {
+    position: relative;
+}
+
+.form-item .form-input input {
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.07);
+    padding: 0.7rem 2.3rem 0.7rem 0.7rem;
+    border: none;
+    border-radius: 5px;
+    outline: none;
+    font-size: 0.9rem;
+    color: #b9b9b9;
+}
+
+.form-item .form-input span {
+    position: absolute;
+    top: 0;
+    right: 0.7rem;
+    bottom: 0;
+    margin: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    height: min-content;
+    color: red;
+}
+
+.form-item .form-input span:hover .span-notify {
+    display: block;
+}
+
+.span-notify {
+    position: absolute;
+    top: 120%;
+    right: 0;
+    background-color: gray;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 24px;
+    font-size: 0.8rem;
+    display: none;
+}
+
+.titleForm {
+    font-size: 1.2rem;
+    margin-bottom: 1.2rem;
+    color: rgb(255, 193, 7);
+}

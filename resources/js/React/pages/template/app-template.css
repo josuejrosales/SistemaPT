@@ -1,0 +1,224 @@
+.container-root {
+    display: flex;
+    background-color: #242424;
+}
+
+.container-nav {
+    width: 250px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.container-nav.open {
+    animation: openNav 0.5s ease-in-out forwards;
+}
+
+.container-nav.close {
+    animation: closeNav 0.5s ease-in-out forwards;
+}
+
+.title-nav {
+    color: white;
+    padding: 2rem;
+    font-size: 1.5rem;
+    text-align: center;
+}
+
+.nav-menu {
+    padding: 1.5rem;
+    padding-top: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-weight: 500;
+}
+
+.nav-menu a.active {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+
+.nav-menu a {
+    width: 100%;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    text-decoration: none;
+    padding: 15px;
+    color: #9d9d9d;
+    border-radius: 10px;
+}
+
+.nav-menu a:hover:not(.active) {
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+.info-item-nav {
+    margin-left: auto;
+}
+
+
+
+
+.fixed-nav-left.active {
+    background-color: rgba(47, 47, 47, 0.7);
+    animation: openFixedNavLeft 0.5s ease-in-out forwards;
+}
+
+.fixed-nav-left.close {
+    background-color: rgba(47, 47, 47, 0.7);
+    animation: closeFixedNavLeft 0.5s ease-in-out forwards;
+}
+
+.content-fixed {
+    display: none;
+}
+
+.content-fixed.active {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 9;
+    display: block;
+}
+
+
+.container-body {
+    flex: 1;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+
+.body-header {
+    width: 100%;
+    padding: 1rem 1.5rem 1rem 0;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.body-header .content-relative {
+    margin-left: auto;
+}
+
+.body-search {
+    flex: 1;
+    max-width: 400px;
+    color: white;
+    display: flex;
+    align-items: center;
+}
+
+.body-header input {
+    width: 100%;
+    background-color: transparent;
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    color: inherit;
+}
+
+.btn-open-nav-left {
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 4rem;
+}
+
+.btn-active {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffffff1f;
+    color: white;
+}
+
+.body-content {
+    overflow-y: auto;
+    background-color: rgba(255, 255, 255, 0.03);
+    border-top-left-radius: 20px;
+    border-top: 0.5px solid rgba(255, 255, 255, 0.05);
+    border-left: 0.5px solid rgba(255, 255, 255, 0.05);
+    flex: 1 0 0;
+    padding: 2rem;
+    color: white;
+    position: relative;
+}
+
+.content-relative {
+    position: relative;
+}
+
+@media screen and (max-width: 600px) {
+    .body-content {
+        padding: 1rem;
+    }
+
+    .options-absolute {
+        right: 1rem;
+        bottom: 1rem;
+    }
+}
+
+@keyframes openFixedNavLeft {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes closeFixedNavLeft {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes openNav {
+    from {
+        left: -260px;
+    }
+
+    to {
+        left: 0;
+    }
+}
+
+@keyframes closeNav {
+    from {
+        left: 0;
+    }
+
+    to {
+        left: -260px;
+    }
+}
+
+@media screen and (max-width: 900px) {
+    .container-nav {
+        position: absolute;
+        top: 0;
+        left: -260px;
+        z-index: 10;
+        box-shadow: 0 0 15px #242424;
+        background-color: #242424;
+    }
+}
