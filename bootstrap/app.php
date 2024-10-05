@@ -13,7 +13,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
-            'module-access' => \App\Http\Middleware\ModuleAccess::class,
+            'web-access' => \App\Http\Middleware\WebAccess::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

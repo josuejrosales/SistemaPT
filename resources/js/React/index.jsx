@@ -1,8 +1,7 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import User from './pages/user/user';
-import './index.css'
+import App from './App';
+import "./index.css";
 
-
-ReactDOM.createRoot(document.getElementById('root')).render(<User />);
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);

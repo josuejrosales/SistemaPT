@@ -1,9 +1,10 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth:sanctum', 'module-access'])->group(function () {
-    Route::get("/hola", function () {
-        return "hola mundo";
+Route::middleware(['auth:sanctum', 'web-access'])->group(function () {
+    Route::get("/getUser", function () {
+        return Auth::user();
     });
 });

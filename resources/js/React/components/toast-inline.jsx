@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getSvgNav } from "../svg/nav.jsx";
 
 function ToastInline({
-  nameClass,
+  nameClass = '',
   nameClassBody = "",
   close,
   setClose,
