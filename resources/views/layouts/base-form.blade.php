@@ -17,11 +17,15 @@
 
         .container {
             max-width: 320px;
+            height: 100vh;
+            display: flex;
+            align-items: center;
         }
 
         .card {
             overflow: hidden;
             border-radius: 1rem;
+            width: 350px;
         }
 
         .card-title {

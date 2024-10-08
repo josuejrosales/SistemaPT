@@ -16,6 +16,7 @@ import LoadingButton from '@mui/lab/LoadingButton';
 import FilterProductos from './FilterProductos';
 import FormImage from '../../forms/form-image';
 import ChangeImageProducto from './ChangeImageProducto';
+import DetalleProduto from './DetalleProducto';
 
 const modalInitial = { title: "", type: "", data: {}, actions: () => { } };
 
@@ -68,7 +69,7 @@ const Productos = () => {
             {productos.loading == LOAD.complete ?
                 <TableComponent
                     data={productos.response}
-                    header={Producto.getFillable()}
+                    header={Producto.getFillableTable()}
                     options={(selected) =>
                         <Box display={'flex'} gap={1}>
                             <Button variant='contained' onClick={() => {
@@ -89,7 +90,7 @@ const Productos = () => {
                         </Box>
                     } />
 
-                : <MaskTable numColumns={Producto.getFillable().length} />}
+                : <MaskTable numColumns={Producto.getFillableTable().length} />}
 
 
             <ModalComponent
@@ -105,9 +106,12 @@ const Productos = () => {
                 {(() => {
                     switch (modal.type) {
                         case "ADD":
-                            return (<FormProducto form={form} model={producto} />);
+                            return <DetalleProduto formRef={form} model={producto} />
+                        // return (<FormProducto form={form} model={producto} />);
                         case "SHOW":
-                            return (<FormProducto model={{ response: modal.data }} disabled={true} />);
+                            return <DetalleProduto model={{ response: modal.data }} disabled={true} />
+                        // return (<FormProducto model={{ response: modal.data }} disabled={true} />);
+
                         case "UPDATE-PHOTO": return (<ChangeImageProducto form={formImage} data={modal.data} />);
                         default:
                             break;

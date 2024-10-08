@@ -4,50 +4,74 @@ import React, { useContext } from "react";
 import { AppContext } from "../contexts/appContext";
 import Loading from './Loading';
 
-function SelectComponent({
-    name = "default",
-    label = "",
-    onChange = () => { },
-    required = false,
-    minWidth = "inherit",
-    defaultValue = "",
-    items = [],
-    disabled = false,
-    loading = false,
-    error = null,
-    configItems = {}
-}) {
-
+function SelectComponent({ id, label = "", options = [], configOptions = {}, props }) {
     return (
-        <Grid2 flexGrow={1} minWidth={minWidth}>
-            <FormControl fullWidth>
-                {loading && <Box position={'absolute'} right={40} top={0} bottom={0} display={'flex'} alignItems={'center'}>
-                    <Loading size={25} />
-                </Box>}
-                <InputLabel id="mode-select">{label}</InputLabel>
-                <Select
-                    required={required}
-                    name={name}
-                    labelId="mode-select"
-                    label={label}
-                    defaultValue={defaultValue}
-                    onChange={e => onChange(e.target.value)}
-                    disabled={disabled || loading ? true : false}>
+        <React.Fragment>
+            <InputLabel id={id}>{label}</InputLabel>
+            <Select
+                labelId={id}
+                {...props}>
 
-                    <MenuItem value="">
-                        <em>None</em>
+                <MenuItem value="">
+                    <em>None</em>
+                </MenuItem>
+
+                {options.map((e, i) =>
+                    <MenuItem
+                        key={i}
+                        value={e[configOptions.id]}>
+                        {e[configOptions.value]}
                     </MenuItem>
-                    {
-                        items.map((e, i) =>
-                            <MenuItem key={i} value={e[configItems.id]}>{e[configItems.value]}</MenuItem>
-                        )
-                    }
-                </Select>
-                {error && <FormHelperText sx={{ color: '#d32f2f' }}>{error[0]}</FormHelperText>}
-            </FormControl>
-        </Grid2>
+                )}
+            </Select>
+        </React.Fragment>
     );
 }
+
+// function SelectComponent({
+//     name = "default",
+//     label = "",
+//     onChange = () => { },
+//     required = false,
+//     minWidth = "inherit",
+//     defaultValue = "",
+//     items = [],
+//     disabled = false,
+//     loading = false,
+//     error = null,
+//     configItems = {}
+// }) {
+
+//     return (
+//         <Grid2 flexGrow={1} minWidth={minWidth}>
+//             <FormControl fullWidth>
+//                 {loading && <Box position={'absolute'} right={40} top={0} bottom={0} display={'flex'} alignItems={'center'}>
+//                     <Loading size={25} />
+//                 </Box>}
+//                 <InputLabel id="mode-select">{label}</InputLabel>
+//                 <Select
+//                     required={required}
+//                     name={name}
+//                     labelId="mode-select"
+//                     label={label}
+//                     defaultValue={defaultValue}
+//                     onChange={e => onChange(e.target.value)}
+//                     disabled={disabled || loading ? true : false}>
+
+//                     <MenuItem value="">
+//                         <em>None</em>
+//                     </MenuItem>
+//                     {
+//                         items.map((e, i) =>
+//                             <MenuItem key={i} value={e[configItems.id]}>{e[configItems.value]}</MenuItem>
+//                         )
+//                     }
+//                 </Select>
+//                 {error && <FormHelperText sx={{ color: '#d32f2f' }}>{error[0]}</FormHelperText>}
+//             </FormControl>
+//         </Grid2>
+//     );
+// }
 
 const StyleInput = styled(TextField)({
     '&.bg-black label': {
@@ -66,24 +90,17 @@ const StyleInput = styled(TextField)({
 })
 
 function InputComponent({
-    name = "default",
-    type = 'text',
-    label,
-    value,
-    required = false,
-    onChange = () => { },
-    bgcolor = null,
-    maxWidth = "inherit",
-    _variant = "outlined",
     error = null,
-    loading,
-    disabled
+    loading = false,
+    props = {},
+    children
 }) {
+
     return (
-        <Grid2 flexGrow={1} maxWidth={maxWidth}>
+        <Grid2 flexGrow={1} {...props} >
             <FormControl fullWidth >
                 {loading && <Box position={'absolute'}
-                    right={20}
+                    right={props.right ?? 20}
                     top={0}
                     bottom={0}
                     display={'flex'}
@@ -92,40 +109,92 @@ function InputComponent({
                     <Loading size={25} />
 
                 </Box>}
-
-                <StyleInput
-                    type={type}
-                    className={bgcolor}
-                    variant={_variant}
-                    label={label}
-                    name={name}
-                    defaultValue={value}
-                    required={required}
-                    onChange={e => onChange(e.target.value)}
-                    slotProps={{ input: { disabled } }} />
-
+                {children}
                 {error && <FormHelperText sx={{ color: '#d32f2f' }}>{error[0]}</FormHelperText>}
             </FormControl>
         </Grid2>
     );
 }
 
+// function InputComponent({
+//     name = "default",
+//     type = 'text',
+//     label,
+//     value,
+//     required = false,
+//     onChange = () => { },
+//     bgcolor = null,
+//     maxWidth = "inherit",
+//     _variant = "outlined",
+//     error = null,
+//     loading,
+//     disabled
+// }) {
+//     return (
+//         <Grid2 flexGrow={1} maxWidth={maxWidth}>
+//             <FormControl fullWidth >
+//                 {loading && <Box position={'absolute'}
+//                     right={20}
+//                     top={0}
+//                     bottom={0}
+//                     display={'flex'}
+//                     alignItems={'center'}>
+
+//                     <Loading size={25} />
+
+//                 </Box>}
+
+//                 <StyleInput
+//                     type={type}
+//                     className={bgcolor}
+//                     variant={_variant}
+//                     label={label}
+//                     name={name}
+//                     value={value}
+//                     defaultValue={value}
+//                     required={required}
+//                     onChange={e => onChange(e.target.value)}
+//                     slotProps={{ input: { disabled } }} />
+
+//                 {error && <FormHelperText sx={{ color: '#d32f2f' }}>{error[0]}</FormHelperText>}
+//             </FormControl>
+//         </Grid2>
+//     );
+// }
+
+// function FormComponent({ _ref = null, children }) {
+//     const { sizeSM } = useContext(AppContext);
+
+//     const Inputs = () =>
+//         <Grid2 container spacing={2} columns={sizeSM ? 1 : 2}>
+//             {children}
+//         </Grid2>
+
+//     return _ref ?
+//         <form
+//             ref={_ref}
+//             onSubmit={e => e.preventDefault()}
+//             style={{ display: "flex", gap: 10, flexDirection: "column" }}>
+
+//             <Inputs />
+//         </form> : <Inputs />
+// }
+
+
 function FormComponent({ _ref = null, children }) {
+
     const { sizeSM } = useContext(AppContext);
 
-    const Inputs = () =>
-        <Grid2 container spacing={2} columns={sizeSM ? 1 : 2}>
-            {children}
-        </Grid2>
-
-    return _ref ?
+    return (
         <form
             ref={_ref}
             onSubmit={e => e.preventDefault()}
             style={{ display: "flex", gap: 10, flexDirection: "column" }}>
-
-            <Inputs />
-        </form> : <Inputs />
+            <Grid2 container spacing={2} columns={sizeSM ? 1 : 2}>
+                {children}
+            </Grid2>
+        </form>
+    )
 }
 
 FormComponent.propTypes = {
@@ -134,4 +203,4 @@ FormComponent.propTypes = {
     }),
 };
 
-export { SelectComponent, InputComponent, FormComponent };
+export { SelectComponent, InputComponent, FormComponent, StyleInput };

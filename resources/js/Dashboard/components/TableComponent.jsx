@@ -28,7 +28,7 @@ function TableComponent({ header, data, colSpanVariant = 0, disabled = false, op
                             )}
                             {options && disabled == false && <TableCell sx={{ p: 1 }} key={i}>{options(element)}</TableCell>}
                         </TableRow>
-                    )) : <TableRow><TableCell colSpan={header.length + colSpanVariant} align='center'>No hay registros</TableCell></TableRow>}
+                    )) : <TableRow><TableCell colSpan={header.length + colSpanVariant + 1} align='center'>No hay registros</TableCell></TableRow>}
                 </TableBody>
             </Table>
         </TableContainer>

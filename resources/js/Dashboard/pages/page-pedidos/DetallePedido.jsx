@@ -29,15 +29,13 @@ function calcPanel(base, initial) {
 }
 
 
-const formDataInitial = {};
-
 function DetallePedido({ form, data = null, disabled }) {
 
     const detalle_pedido = useHttp({ url: "/detalle_pedido" });
     const productos = useHttp({ url: "/productos" });
     const [table, setTable] = useState([]);
     const [panel, setPanel] = useState(panelInitial);
-    const [formData, setFormData] = useReducer(setFormDataDispatch, formDataInitial);
+    const [formData, setFormData] = useReducer(setFormDataDispatch, {});
 
     useEffect(() => {
         setPanel(calcPanel(table, panelInitial));
@@ -51,7 +49,6 @@ function DetallePedido({ form, data = null, disabled }) {
     useEffect(() => {
         detalle_pedido.response && setTable(detalle_pedido.response);
     }, [detalle_pedido.response]);
-
 
     useEffect(() => {
         productos.startHttp()

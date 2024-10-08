@@ -1,44 +1,47 @@
-import { useEffect } from "react";
-import { FormComponent, InputComponent } from "../components/FormComponent";
+import React from "react";
+import { InputComponent, StyleInput } from "../components/FormComponent";
 
-function FormCliente({ form, model, children, disabled = false }) {
-
-    useEffect(() => {
-        return () => model.setError?.(null);
-    }, []);
-
+function FormCliente({ state, dispatch, error, disabled = false, children }) {
     return (
-        <FormComponent _ref={form}>
-            <InputComponent
-                name="Nombre"
-                label={"Nombre"}
-                value={model?.response?.Nombre ?? ""}
-                error={model?.error?.data?.Nombre ?? null}
-                disabled={disabled} />
-
-            <InputComponent
-                name="Email"
-                label={"Correo"}
-                value={model?.response?.Email ?? ""}
-                error={model?.error?.data?.Email ?? null}
-                disabled={disabled} />
-
-            <InputComponent
-                name="Telefono"
-                label={"Telefono"}
-                value={model?.response?.Telefono ?? ""}
-                error={model?.error?.data?.Telefono ?? null}
-                disabled={disabled} />
-
-            <InputComponent
-                name="Direccion"
-                label={"Direccion"}
-                value={model?.response?.Direccion ?? ""}
-                error={model?.error?.data?.Direccion ?? null}
-                disabled={disabled} />
-
+        <React.Fragment>
+            <InputComponent error={error?.Nombre}>
+                <StyleInput
+                    name="Nombre"
+                    label='Nombre'
+                    value={state.Nombre ?? ""}
+                    onChange={({ target }) => dispatch({ Nombre: target.value })}
+                    disabled={disabled}
+                />
+            </InputComponent>
+            <InputComponent error={error?.Email}>
+                <StyleInput
+                    name="Email"
+                    label='Correo'
+                    value={state?.Email ?? ""}
+                    onChange={({ target }) => dispatch({ Email: target.value })}
+                    disabled={disabled}
+                />
+            </InputComponent>
+            <InputComponent error={error?.Telefono}>
+                <StyleInput
+                    name="Telefono"
+                    label='Telefono'
+                    value={state?.Telefono ?? ""}
+                    onChange={({ target }) => dispatch({ Telefono: target.value })}
+                    disabled={disabled}
+                />
+            </InputComponent>
+            <InputComponent error={error?.Direccion}>
+                <StyleInput
+                    name="Direccion"
+                    label='Direccion'
+                    value={state?.Direccion ?? ""}
+                    onChange={({ target }) => dispatch({ Direccion: target.value })}
+                    disabled={disabled}
+                />
+            </InputComponent>
             {children}
-        </FormComponent>
+        </React.Fragment>
     );
 
 }

@@ -1,7 +1,7 @@
 import { Box } from "@mui/material";
 import { useEffect, useState } from "react";
 import useHttp from "../../hooks/useHttp";
-import { SelectComponent } from "../../components/FormComponent";
+import { InputComponent, SelectComponent } from "../../components/FormComponent";
 import LOAD from "../../global/load";
 
 const config = { url: "/productos-filters" }
@@ -57,25 +57,35 @@ function FilterProductos({ onChange = () => { }, onCancel = () => { } }) {
     }, []);
 
     return (
-        <Box display={'flex'} gap={2}>
-            <SelectComponent
-                label="Categoria"
-                defaultValue={""}
-                items={categorias ?? []}
-                configItems={{ id: "id", value: "Nombre" }}
-                value={categoriaId}
-                onChange={value => setCategoriaId(value)}
-                loading={loading == LOAD.progress}
-            />
-            <SelectComponent
-                label="Sub Categoria"
-                defaultValue={""}
-                items={subCategorias ?? []}
-                configItems={{ id: "id", value: "Nombre" }}
-                value={subCategoriaId}
-                onChange={value => setSubCategoriaId(value)}
-                loading={loading == LOAD.progress}
-            />
+        <Box display={'flex'} gap={2} width={"100%"}>
+            <InputComponent>
+                <SelectComponent
+                    label="Categoria"
+                    defaultValue={""}
+                    items={categorias ?? []}
+                    configItems={{ id: "id", value: "Nombre" }}
+                    value={categoriaId}
+                    onChange={value => setCategoriaId(value)}
+                    loading={loading == LOAD.progress}
+                    props={{
+                        label: "Categoria"
+                    }}
+                />
+            </InputComponent>
+            <InputComponent>
+                <SelectComponent
+                    label="Sub Categoria"
+                    defaultValue={""}
+                    items={subCategorias ?? []}
+                    configItems={{ id: "id", value: "Nombre" }}
+                    value={subCategoriaId}
+                    onChange={value => setSubCategoriaId(value)}
+                    loading={loading == LOAD.progress}
+                    props={{
+                        label: "Sub Categoria"
+                    }}
+                />
+            </InputComponent>
         </Box>
     );
 }

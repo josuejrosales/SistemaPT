@@ -1,6 +1,5 @@
 import { Box, Button, Divider, IconButton } from "@mui/material";
 import TitleSection from "../../components/TitleSection";
-import StoreIcon from '@mui/icons-material/Store';
 import { useEffect, useRef, useState } from "react";
 import useHttp from "../../hooks/useHttp";
 import LOAD from "../../global/load";
@@ -10,7 +9,7 @@ import { Cliente } from "../../class/Cliente";
 import ModalComponent from "../../components/ModalComponent";
 import getIcon from "../../components/Icons";
 import LoadingButton from '@mui/lab/LoadingButton';
-import FormCliente from "../../forms/form-cliente";
+import DetalleCliente from "./DetalleCliente";
 
 const modalInitial = { title: "", type: "", data: {}, actions: () => { } };
 
@@ -58,14 +57,14 @@ function Clientes() {
             {clientes.loading == LOAD.complete ?
                 <TableComponent
                     data={clientes.response}
-                    header={Cliente.getFillable()}
+                    header={Cliente.getFillableTable()}
                     options={(selected) =>
                         <Button variant='contained' onClick={() => {
                             setModal({ ...modal, title: "Detalle del cliente", type: "SHOW", data: selected })
                             setModalOpen(true);
                         }}>Show</Button>} />
 
-                : <MaskTable numColumns={Cliente.getFillable().length} />}
+                : <MaskTable numColumns={Cliente.fillable.length} />}
 
 
             <ModalComponent
@@ -82,17 +81,17 @@ function Clientes() {
                     switch (modal.type) {
                         case "ADD-PERSON":
                             return (
-                                <FormCliente
-                                    form={form}
-                                    model={cliente} />
-                            );
+                                <DetalleCliente
+                                    formRef={form}
+                                    model={cliente}
+                                />);
                         case "SHOW":
                             return (
-                                <FormCliente
-                                    form={form}
+                                <DetalleCliente
+                                    formRef={form}
                                     model={{ response: modal.data }}
-                                    disabled={true} />
-                            );
+                                    disabled={true}
+                                />);
                         default:
                             break;
                     }
