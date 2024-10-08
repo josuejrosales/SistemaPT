@@ -2,28 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LoginRequest;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
-    public function __invoke()
+    public function index()
     {
-        if (Auth::user()) return redirect("/");
-        session()->forget('auth_token');
         return view("login");
     }
 
-    public function LoginIn(Request $request)
+    public function store(LoginRequest $request)
     {
-
-        $valid  = $request->validate(
-            ["email" => "required", "password" => "required"],
-            $request->except("_token")
-        );
-
-        if (Auth::attempt($valid)) {
+        if (Auth::attempt($request->only(["email", "password"]))) {
 
             $user = Auth::user();
 
@@ -35,25 +27,20 @@ class LoginController extends Controller
 
                 session(['auth_token' => $token]);
 
-                return redirect("/");
+                return redirect("/dashboard");
             }
         }
 
         return redirect()
             ->back()
-            ->withErrors(["email" => "Correo incorrecto", "password" => "contraseña incorrecta"])
+            ->withErrors(["email" => "El correo no existe", "password" => "Contraseña incorrecta"])
             ->withInput();
     }
 
-    public function Register()
-    {
-        // new register       
-    }
-
-    public function LoginClose()
+    public function destroy()
     {
         Auth::logout();
         session()->flush();
-        return redirect()->route("login");
+        return redirect("/login");
     }
 }

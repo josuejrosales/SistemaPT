@@ -13,7 +13,8 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
-            'web-access' => \App\Http\Middleware\WebAccess::class,
+            'api-access' => \App\Http\Middleware\ApiAccess::class,
+            'not-auth' => \App\Http\Middleware\NotAuth::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

@@ -1,29 +1,60 @@
-<!DOCTYPE html>
-<html lang="en">
+@extends('layouts.base-form')
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
+@section('form-title')
+    <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="currentColor" class="bi bi-person-fill-gear"
+        viewBox="0 0 16 16">
+        <path
+            d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0m-9 8c0 1 1 1 1 1h5.256A4.5 4.5 0 0 1 8 12.5a4.5 4.5 0 0 1 1.544-3.393Q8.844 9.002 8 9c-5 0-6 3-6 4m9.886-3.54c.18-.613 1.048-.613 1.229 0l.043.148a.64.64 0 0 0 .921.382l.136-.074c.561-.306 1.175.308.87.869l-.075.136a.64.64 0 0 0 .382.92l.149.045c.612.18.612 1.048 0 1.229l-.15.043a.64.64 0 0 0-.38.921l.074.136c.305.561-.309 1.175-.87.87l-.136-.075a.64.64 0 0 0-.92.382l-.045.149c-.18.612-1.048.612-1.229 0l-.043-.15a.64.64 0 0 0-.921-.38l-.136.074c-.561.305-1.175-.309-.87-.87l.075-.136a.64.64 0 0 0-.382-.92l-.148-.045c-.613-.18-.613-1.048 0-1.229l.148-.043a.64.64 0 0 0 .382-.921l-.074-.136c-.306-.561.308-1.175.869-.87l.136.075a.64.64 0 0 0 .92-.382zM14 12.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0" />
+    </svg>
+@endsection
 
-<body>
-    LOGIN view (example)
-    <form action="{{ route('LoginIn') }}" method="POST">
+@section('form-content')
+    <form action="/login" method="POST">
         @csrf
-        <input type="text" name="email" value="{{ old('email') }}">
-        @error('email')
-            <p>{{ $message }}</p>
-        @enderror
-        <input type="password" name="password">
-        @error('password')
-            <p>{{ $message }}</p>
-        @enderror
-        <input type="submit" value="login">
+        <div class="input-field">
+            <input id="email" type="text" name="email"
+                class="validate  {{ $errors->has('email') ? 'invalid' : false }}" value="{{ old('email') }}" required>
+            <label for="email">Usuario</label>
+            @error('email')
+                <small class="helper-text" id="passwordError" style="color: red">{{ $message }}</small>
+            @enderror
+        </div>
+        <div class="input-field">
+            <input id="password" type="password" name="password"
+                class="validate {{ $errors->has('password') ? 'invalid' : false }}" required>
+            <label for="password">Contraseña</label>
+            @error('password')
+                <small class="texts" style="color: red">{{ $message }}</small>
+            @enderror
+        </div>
+
+        <div class="center">
+            <button class="btn waves-effect waves-light green" type="submit" name="action">
+                Login
+            </button>
+        </div>
     </form>
+@endsection
 
+@section('form-fotter')
+    <span>No tienes una cuenta ? </span><br>
+    <a href="/register" class="blue-text">Registrame</a>
+@endsection
 
-</body>
-
-</html>
+@section('scripts')
+    <script>
+        $(document).ready(function() {
+            @if (session('success'))
+                M.toast({
+                    html: '{{ session('success') }}',
+                    classes: 'green'
+                });
+            @endif
+            @if (session('user'))
+                $("#email").val('{{ session('user') }}');
+                $("label[for='email']").addClass('active');
+                $("#password").focus();
+            @endif
+        });
+    </script>
+@endsection
