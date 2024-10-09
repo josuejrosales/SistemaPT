@@ -82,7 +82,7 @@ const Productos = () => {
                             </IconButton>
                             <IconButton variant='contained' onClick={() => {
                                 setModal({
-                                    ...modal, data: selected, title: `Establecer imagen ( ${selected.Nombre} )`, type: "UPDATE-PHOTO", data: selected, actions: (load) =>
+                                    ...modal, data: selected, title: `Establecer imagen ( ${selected.Nombre} )`, type: "UPDATE-PHOTO", actions: (load) =>
                                         <LoadingButton
                                             loading={load == LOAD.progress}
                                             onClick={() => producto.startHttp({ url: `/producto-image/${selected.id}`, method: "POST", data: formImage.current })}>

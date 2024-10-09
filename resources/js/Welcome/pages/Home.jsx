@@ -18,7 +18,8 @@ export default function Home() {
         );
     }, [app]);
 
-    if (!app?.selected ?? true) return <Typography>Selecciona una categoria...</Typography>
+    if (!(app?.selected ?? false)) return <Typography>Selecciona una categoria...</Typography>;
+
     if (produtos.loading != LOAD.complete) return <Loader />
 
     return (
