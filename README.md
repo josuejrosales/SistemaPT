@@ -11,7 +11,6 @@
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
 
-
 # Proyecto Laravel 11
 
 Este es un proyecto desarrollado con Laravel 11 y PHP 8.1. A continuación, se detallan los pasos necesarios para poner en funcionamiento el proyecto.
@@ -24,7 +23,6 @@ Asegúrate de tener instalados los siguientes componentes antes de comenzar:
 - **Composer** (administrador de dependencias para PHP)
 - **Node.js** (con npm) para la instalación de paquetes frontend
 - **MySQL** o cualquier otra base de datos soportada por Laravel
-- **Servidor web** (como Apache o Nginx)
 
 ## Instalación
 
