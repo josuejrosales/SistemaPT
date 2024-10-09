@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('pedido', function (Blueprint $table) {
             $table->id();
             $table->decimal('SubTotal', 8, 2);
-            $table->decimal('Descuento', 8, 2)->nullable();
             $table->decimal('Impuesto', 8, 2);
             $table->decimal('Total', 8, 2);
             $table->string('Estado');

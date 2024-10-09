@@ -33,7 +33,7 @@ class LoginController extends Controller
 
         return redirect()
             ->back()
-            ->withErrors(["email" => "El correo no existe", "password" => "Contraseña incorrecta"])
+            ->withErrors(["email" => "Error al validar", "password" => "Contraseña incorrecta"])
             ->withInput();
     }
 

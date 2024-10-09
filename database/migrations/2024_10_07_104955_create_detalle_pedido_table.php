@@ -16,11 +16,11 @@ return new class extends Migration
             $table->integer('Cantidad');
             $table->decimal('PrecioUnitario', 10, 2);
             $table->decimal('Total', 10, 2);
-            
+
             $table->bigInteger('IdPedido')->unsigned()->nullable(false);
             $table->bigInteger('IdProducto')->unsigned()->nullable(false);
 
-            $table->foreign('IdPedido')->references('id')->on('pedido')->onDelete('restrict');
+            $table->foreign('IdPedido')->references('id')->on('pedido')->onDelete('cascade');
             $table->foreign('IdProducto')->references('id')->on('producto')->onDelete('restrict');
 
             $table->timestamps();

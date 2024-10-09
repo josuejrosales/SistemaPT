@@ -1,88 +1,106 @@
 import { Box } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 import useHttp from "../../hooks/useHttp";
 import { InputComponent, SelectComponent } from "../../components/FormComponent";
 import LOAD from "../../global/load";
 
 const config = { url: "/productos-filters" }
 
-function FilterProductos({ onChange = () => { }, onCancel = () => { } }) {
+const funReducer = (state, action) => ({ ...state, ...action });
 
-    const { response, loading, startHttp } = useHttp(config);
+function FilterProductos({ save = null, state = null, error = {}, disabled = false, onDataModel = (obj) => { }, onChange = () => { }, onCancel = () => { } }) {
+
+    const { response, loading, startHttp, setData } = useHttp(config);
 
     const [categorias, setCategorias] = useState([]);
     const [subCategorias, setSubCategorias] = useState([]);
 
-    const [categoriaId, setCategoriaId] = useState(null);
-    const [subCategoriaId, setSubCategoriaId] = useState(null);
+    const [formData, setFormData] = useReducer(funReducer, { IdCategoria: "", IdSubCategoria: "" });
 
     const resetFilters = () => {
-        setCategorias(response.categorias)
-        setSubCategorias(response.sub_categorias)
+        const { categorias, sub_categorias } = response;
+        setCategorias(categorias)
+        setSubCategorias(sub_categorias)
+        onDataModel({ categorias, sub_categorias })
     }
 
     useEffect(() => {
         if (response) {
-            if (categoriaId == "") resetFilters()
-            else setSubCategorias(response.sub_categorias.filter(item => categoriaId == item.IdCategoria))
+            if (formData.IdCategoria == "") resetFilters()
+            else setSubCategorias(response.sub_categorias.filter(item => formData.IdCategoria == item.IdCategoria))
         }
-    }, [categoriaId]);
+    }, [formData.IdCategoria]);
 
     useEffect(() => {
         if (response) {
-            if (subCategoriaId == "") resetFilters()
+            if (formData.IdSubCategoria == "") resetFilters()
             else setCategorias(response.categorias.filter(item => {
-                const found = response.sub_categorias.find(x => x.id == subCategoriaId);
+                const found = response.sub_categorias.find(x => x.id == formData.IdSubCategoria);
                 return item.id == (found ? found.IdCategoria : 0)
             }))
         }
-    }, [subCategoriaId]);
+    }, [formData.IdSubCategoria]);
 
     useEffect(() => {
-        if (categoriaId == "" && subCategoriaId == "") onCancel();
-        if (categoriaId && subCategoriaId) {
+        if (formData.IdCategoria == "" && formData.IdSubCategoria == "") onCancel();
+        if (formData.IdCategoria && formData.IdSubCategoria) {
             onChange(new URLSearchParams({
-                "IdCategoria": categoriaId,
-                "IdSubCategoria": subCategoriaId,
+                "IdCategoria": formData.IdCategoria,
+                "IdSubCategoria": formData.IdSubCategoria,
             }))
         }
-    }, [categoriaId, subCategoriaId]);
+    }, [formData.IdCategoria, formData.IdSubCategoria]);
 
     useEffect(() => {
+        if (state) setFormData({ IdCategoria: state.IdCategoria, IdSubCategoria: state.IdSubCategoria })
         response && resetFilters()
     }, [response]);
 
+
     useEffect(() => {
-        startHttp();
+        if (save) setData(save)
+        else startHttp();
     }, []);
 
     return (
         <Box display={'flex'} gap={2} width={"100%"}>
-            <InputComponent>
+            <InputComponent
+                loading={loading == LOAD.progress}
+                error={error.IdCategoria}
+                props={{ right: 40 }} >
+
                 <SelectComponent
+                    id="Categoria"
                     label="Categoria"
-                    defaultValue={""}
-                    items={categorias ?? []}
-                    configItems={{ id: "id", value: "Nombre" }}
-                    value={categoriaId}
-                    onChange={value => setCategoriaId(value)}
-                    loading={loading == LOAD.progress}
+                    options={categorias ?? []}
+                    configOptions={{ id: "id", value: "Nombre" }}
+
                     props={{
-                        label: "Categoria"
+                        disabled,
+                        name: "IdCategoria",
+                        label: "Categoria",
+                        value: formData.IdCategoria ?? "",
+                        onChange: ({ target }) => setFormData({ IdCategoria: target.value })
                     }}
                 />
             </InputComponent>
-            <InputComponent>
+            <InputComponent
+                loading={loading == LOAD.progress}
+                error={error.IdSubCategoria}
+                props={{ right: 40 }}>
+
                 <SelectComponent
+                    id="SubCategoria"
                     label="Sub Categoria"
-                    defaultValue={""}
-                    items={subCategorias ?? []}
-                    configItems={{ id: "id", value: "Nombre" }}
-                    value={subCategoriaId}
-                    onChange={value => setSubCategoriaId(value)}
-                    loading={loading == LOAD.progress}
+                    options={subCategorias ?? []}
+                    configOptions={{ id: "id", value: "Nombre" }}
+
                     props={{
-                        label: "Sub Categoria"
+                        disabled,
+                        name: "IdSubCategoria",
+                        label: "Sub Categoria",
+                        value: formData.IdSubCategoria ?? "",
+                        onChange: ({ target }) => setFormData({ IdSubCategoria: target.value })
                     }}
                 />
             </InputComponent>

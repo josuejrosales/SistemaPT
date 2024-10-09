@@ -1,50 +1,51 @@
 import { Box, Divider, IconButton, Typography } from "@mui/material";
 import TitleSection from "../../components/TitleSection";
-import React, { useEffect, useRef, useState } from "react";
-import useHttp from "../../hooks/useHttp";
-import LOAD from "../../global/load";
-import TableComponent from "../../components/TableComponent";
-import MaskTable from "../../components/MaskTable";
-import { Cliente } from "../../class/Cliente";
-import ModalComponent from "../../components/ModalComponent";
 import getIcon from "../../components/Icons";
+import React, { useEffect, useRef, useState } from "react";
+import LOAD from "../../global/load";
+import useHttp from "../../hooks/useHttp";
+import ModalComponent from "../../components/ModalComponent";
 import LoadingButton from '@mui/lab/LoadingButton';
-import DetalleCliente from "./DetalleCliente";
-import VisibilityIcon from '@mui/icons-material/Visibility';
+import { FormComponent, InputComponent, StyleInput } from "../../components/FormComponent";
+import MaskTable from "../../components/MaskTable";
+import { MetodoPago } from "../../class/MetodoPago";
+import TableComponent from "../../components/TableComponent";
 import DeleteIcon from '@mui/icons-material/Delete';
+import { Categoria as CT } from "../../class/Categoria";
+
 
 const modalInitial = { title: "", type: "", data: {}, actions: () => { } };
 
-function Clientes() {
+function Categoria() {
 
     const form = useRef();
 
-    const clientes = useHttp({ url: "/clientes" });
-    const cliente = useHttp({ alert: true });
+    const categorias = useHttp({ url: "/categorias" });
+    const categoria = useHttp({ alert: true });
 
     const [modalOpen, setModalOpen] = useState(false);
     const [modal, setModal] = useState(modalInitial);
 
     useEffect(() => {
-        if (cliente.loading == LOAD.complete) {
+        if (categoria.loading == LOAD.complete) {
             setModalOpen(false);
-            clientes.startHttp();
+            categorias.startHttp();
         }
-    }, [cliente.loading])
+    }, [categoria.loading])
 
     useEffect(() => {
-        clientes.startHttp();
+        categorias.startHttp();
     }, [])
 
     return (
-        <Box gap={1} display={'flex'} flexDirection={"column"} overflow={'hidden'} width={"100%"}>
-            <TitleSection Icon={() => getIcon("ADD-PERSON")} title={"Clientes"}>
+        <Box gap={1} display={'flex'} flexDirection={"column"} overflow={'hidden'} flexGrow={1}>
+            <TitleSection Icon={() => getIcon("ADD-CATEGORY")} title={"Categorias"}>
                 <IconButton onClick={() => {
                     setModal({
-                        ...modal, title: "Registrar cliente", type: "ADD-PERSON", actions: (load) =>
+                        ...modal, title: "Registrar categoria", type: "ADD-CATEGORY", actions: (load) =>
                             <LoadingButton
                                 loading={load == LOAD.progress}
-                                onClick={() => cliente.startHttp({ url: "/clientes", method: "POST", data: form.current })}>
+                                onClick={() => categoria.startHttp({ url: "/categorias", method: "POST", data: form.current })}>
                                 Save
                             </LoadingButton>
                     })
@@ -56,24 +57,18 @@ function Clientes() {
 
             <Divider sx={{ mb: 2 }} />
 
-            {clientes.loading == LOAD.complete ?
+            {categorias.loading == LOAD.complete ?
                 <TableComponent
-                    data={clientes.response}
-                    header={Cliente.getFillableTable()}
+                    data={categorias.response}
+                    header={CT.getFillableTable()}
                     options={(selected) =>
                         <React.Fragment>
                             <IconButton variant='contained' onClick={() => {
-                                setModal({ ...modal, title: "Detalle del cliente", type: "SHOW", data: selected })
-                                setModalOpen(true);
-                            }}>
-                                <VisibilityIcon />
-                            </IconButton>
-                            <IconButton variant='contained' onClick={() => {
                                 setModal({
-                                    ...modal, title: "Eliminar cliente", type: "DELETE", data: selected, actions: (load) =>
+                                    ...modal, title: "Eliminar categoria", type: "DELETE", data: selected, actions: (load) =>
                                         <LoadingButton
                                             loading={load == LOAD.progress}
-                                            onClick={() => cliente.startHttp({ url: `/clientes/${selected.id}`, method: "DELETE" })}>
+                                            onClick={() => categoria.startHttp({ url: `/categorias/${selected.id}`, method: "DELETE" })}>
                                             Eliminar
                                         </LoadingButton>
                                 })
@@ -85,39 +80,37 @@ function Clientes() {
                         </React.Fragment>
                     } />
 
-                : <MaskTable numColumns={Cliente.fillable.length} />}
+                : <MaskTable numColumns={CT.fillable.length} />}
 
 
             <ModalComponent
                 open={modalOpen}
                 onClose={() => setModalOpen(false)}
                 Title={() => <TitleSection title={modal.title} Icon={() => getIcon(modal.type)} />}
-                actions={() => modal.actions(cliente.loading)}
+                actions={() => modal.actions(categoria.loading)}
                 onExited={() => {
                     setModal(modalInitial);
-                    cliente.reset()
+                    categoria.reset()
                 }}>
 
                 {(() => {
                     switch (modal.type) {
-                        case "ADD-PERSON":
+                        case "ADD-CATEGORY":
                             return (
-                                <DetalleCliente
-                                    formRef={form}
-                                    model={cliente}
-                                />);
-                        case "SHOW":
-                            return (
-                                <DetalleCliente
-                                    formRef={form}
-                                    model={{ response: modal.data }}
-                                    disabled={true}
-                                />);
+                                <FormComponent _ref={form}>
+                                    <InputComponent props={{ width: '100%' }}>
+                                        <StyleInput label="Nombre categoria" name="Nombre" />
+                                    </InputComponent>
+                                    <InputComponent rops={{ width: '100%' }}>
+                                        <StyleInput label="Descripcion" name="Descripcion" />
+                                    </InputComponent>
+                                </FormComponent>
+                            );
+
                         case "DELETE":
                             return (
                                 <React.Fragment>
                                     <Typography>Nombre : {modal.data?.Nombre ?? ""}</Typography>
-                                    <Typography>Correo : {modal.data?.Email ?? ""}</Typography>
                                 </React.Fragment>
                             );
                         default:
@@ -125,8 +118,8 @@ function Clientes() {
                     }
                 })()}
             </ModalComponent>
-        </Box >
+        </Box>
     );
 }
 
-export default Clientes;
+export default Categoria;

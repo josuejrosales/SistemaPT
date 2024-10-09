@@ -18,7 +18,9 @@
         "@mui/styles": "^6.1.2",
         "@toolpad/core": "^0.7.0",
         "@vitejs/plugin-react": "^4.2.1",
+        "chart.js": "^4.4.4",
         "react": "^18.2.0",
+        "react-chartjs-2": "^5.2.0",
         "react-dom": "^18.2.0",
         "react-hot-toast": "^2.4.1",
         "react-router-dom": "^6.22.3"

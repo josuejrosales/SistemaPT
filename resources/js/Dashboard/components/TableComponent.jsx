@@ -2,7 +2,6 @@
 import React from 'react';
 import PropTypes, { object } from 'prop-types';
 import { Paper, styled, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
-import { Producto } from '../class/Producto';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     backgroundColor: theme.palette.primary.main,

@@ -12,7 +12,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::group(["prefix" => "/dashboard"], function () {
         Route::get("/{param?}", fn() => view("dashboard"))
-            ->where('param', 'reportes|home|productos|clientes|pedidos');
+            ->where('param', 'reportes|home|productos|clientes|pedidos|mantenimiento');
     });
 });
 
@@ -24,8 +24,3 @@ Route::middleware(['not-auth'])->group(function () {
 
     Route::resource('/register', RegisterController::class);
 });
-
-
-
-//Route::get("/temp", function () {});
-// Route::fallback(fn() => view('welcome'))->middleware(['auth', 'web-access']);

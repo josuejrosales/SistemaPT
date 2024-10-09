@@ -15,4 +15,9 @@ class Categoria extends Model
         'Nombre',
         'Descripcion'
     ];
+
+    public function getSubCategoria()
+    {
+        return $this->hasMany(SubCategoria::class, "IdCategoria", "id");
+    }
 }

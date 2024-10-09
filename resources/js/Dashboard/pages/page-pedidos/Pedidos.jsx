@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import TableComponent from '../../components/TableComponent';
-import { Box, Button, Divider, IconButton } from '@mui/material';
+import { Box, Divider, IconButton } from '@mui/material';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import TitleSection from '../../components/TitleSection';
 import PostAddIcon from '@mui/icons-material/PostAdd';
 import ModalComponent from '../../components/ModalComponent';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 
 import useHttp from '../../hooks/useHttp';
 import MaskTable from '../../components/MaskTable';
@@ -61,10 +62,10 @@ const Pedidos = () => {
                     data={pedidos.response}
                     header={Pedido.getFillable()}
                     options={(selected) =>
-                        <Button variant='contained' onClick={() => {
+                        <IconButton variant='contained' onClick={() => {
                             setModal({ ...modal, title: "Detalle del pedido", type: "SHOW", data: selected })
                             setModalOpen(true);
-                        }}>Show</Button>} />
+                        }}><VisibilityIcon /></IconButton>} />
 
                 : <MaskTable numColumns={Pedido.getFillable().length} />}
 
@@ -83,11 +84,11 @@ const Pedidos = () => {
                     switch (modal.type) {
                         case "ADD-PEDIDO":
                             return (
-                                <DetallePedido disabled={false} form={form} />
+                                <DetallePedido form={form} disabled={false} />
                             );
                         case "SHOW":
                             return (
-                                <DetallePedido data={modal.data} disabled={true} />
+                                <DetallePedido model={{ response: modal.data }} disabled={true} />
                             );
                         default:
                             break;

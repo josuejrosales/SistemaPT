@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\DetallePedido;
 use App\Models\Pedido;
+use App\Models\Producto;
 use App\Models\System\StateOperation;
 use Exception;
 use Illuminate\Http\Request;
@@ -61,8 +62,12 @@ class PedidoController extends Controller
 
             foreach ($table as $value) {
 
-                $c = number_format($value->cound, 2);
+                $c = number_format($value->cound, 0);
                 $p = number_format($value->price, 2);
+
+                $producto = Producto::find($value->id);
+                $producto->Stock -= $c;
+                $producto->save();
 
                 DetallePedido::create([
                     "IdPedido" => $pedido->id,
@@ -75,20 +80,3 @@ class PedidoController extends Controller
         });
     }
 }
-/* 
-
-------------Descuento
-
-SubTotal
-Impuesto
-Total
-
-
-
-
-IdMetodoPago
-IdCliente
-created_at
-updated_at
-
-*/

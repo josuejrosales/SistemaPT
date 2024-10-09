@@ -1,22 +1,22 @@
-import React, { useEffect, useState } from "react";
-import { FormComponent, InputComponent, SelectComponent } from "../components/FormComponent";
+import React, { useEffect, useReducer, useState } from "react";
+import { InputComponent, SelectComponent, StyleInput } from "../components/FormComponent";
 import useHttp from "../hooks/useHttp";
 import LOAD from "../global/load";
 import { Box } from "@mui/material";
+import { Pedido } from "../class/Pedido";
 
-function FormPedido({ form = null, data, panel = {}, state = {}, dispatch = () => { }, disabled = false, children }) {
+const funReducer = (state, action) => ({ ...state, ...action });
+
+function FormPedido({ state, panel = {}, error = {}, disabled = false }) {
 
     const clientes = useHttp({ url: "/clientes" });
     const metodo_pagos = useHttp({ url: "/metodo_pago" });
 
+    const [formData, setFormData] = useReducer(funReducer, {});
+
     useEffect(() => {
-        if (data) {
-            dispatch({
-                IdCliente: data?.IdCliente ?? "",
-                IdMetodoPago: data?.IdMetodoPago ?? "",
-            })
-        }
-    }, [data]);
+        state?.response && setFormData(Pedido.filterParams(state.response, ["IdCliente", "IdMetodoPago"]));
+    }, [state]);
 
     useEffect(() => {
         clientes.startHttp();
@@ -24,67 +24,75 @@ function FormPedido({ form = null, data, panel = {}, state = {}, dispatch = () =
     }, []);
 
     return (
-
-        <FormComponent _ref={form}>
-
+        <Box display={'flex'} gap={2} flexWrap={'wrap'}>
+            <InputComponent props={{ maxWidth: "70px" }}>
+                <StyleInput
+                    disabled={true}
+                    label="IGV"
+                    value={"18%"} />
+            </InputComponent>
             <InputComponent
-                maxWidth="100px"
-                name="ivg"
-                label={"IGV"}
-                value={"18%"}
-                disabled={true} />
-
-            <SelectComponent
-                minWidth="250px"
                 loading={clientes.loading == LOAD.progress}
-                name="IdCliente"
-                label={"Cliente"}
-                items={clientes.response ?? []}
-                configItems={{ id: "id", value: "Nombre" }}
-                defaultValue={state.IdCliente ?? ""}
-                onChange={v => dispatch({ IdCliente: v })}
-                disabled={disabled} />
+                error={error.IdCliente}
+                props={{ right: 40, }}>
 
-            <SelectComponent
-                minWidth="100px"
-                label={"Metodo de pago"}
-                name="IdMetodoPago"
-                items={metodo_pagos.response ?? []}
-                configItems={{ id: "id", value: "Nombre" }}
-                defaultValue={state.IdMetodoPago ?? ""}
-                onChange={v => dispatch({ IdMetodoPago: v })}
-                loading={metodo_pagos.loading == LOAD.progress}
-                disabled={disabled} />
+                <SelectComponent
+                    id="Cliente"
+                    label="Cliente"
+                    options={clientes.response ?? []}
+                    configOptions={{ id: "id", value: "Nombre" }}
 
-            <Box display={'flex'} flexDirection={'column'} width={'100%'}>
+                    props={{
+                        disabled,
+                        name: "IdCliente",
+                        label: "Cliente",
+                        value: formData.IdCliente ?? "",
+                        onChange: ({ target }) => setFormData({ IdCliente: target.value })
+                    }}
+                />
+            </InputComponent>
+            <InputComponent
+                loading={clientes.loading == LOAD.progress}
+                error={error.IdMetodoPago}
+                props={{ right: 40, }}>
 
-                <InputComponent
-                    bgcolor={'bg-black'}
-                    _variant="filled"
-                    name="Impuesto"
-                    label={"Impuesto"}
-                    value={Number(panel.Impuesto).toFixed(2) ?? ""}
-                    disabled={true} />
+                <SelectComponent
+                    id="MetodoPago"
+                    label="Metodo de Pago"
+                    options={metodo_pagos.response ?? []}
+                    configOptions={{ id: "id", value: "Nombre" }}
 
-                <InputComponent
-                    bgcolor={'bg-black'}
-                    _variant="filled"
-                    name="Descuento"
-                    label={"Sub Total"}
-                    value={Number(panel.SubTotal).toFixed(2) ?? ""}
-                    disabled={true} />
+                    props={{
+                        disabled,
+                        name: "IdMetodoPago",
+                        label: "Metodo de Pago",
+                        value: formData.IdMetodoPago ?? "",
+                        onChange: ({ target }) => setFormData({ IdMetodoPago: target.value })
+                    }}
+                />
+            </InputComponent>
 
-                <InputComponent
-                    bgcolor={'bg-black'}
-                    name="Total"
-                    label={"Total"}
-                    value={Number(panel.Total).toFixed(2) ?? ""}
-                    _variant="filled"
-                    disabled={true} />
-            </Box>
-
-            {children}
-        </FormComponent>
+            <InputComponent props={{ width: "100%" }}>
+                <StyleInput
+                    className="bg-black"
+                    disabled={true}
+                    label="Impuesto"
+                    variant="filled"
+                    value={Number(panel.Impuesto).toFixed(2) ?? ""} />
+                <StyleInput
+                    className="bg-black"
+                    disabled={true}
+                    label="Sub Total"
+                    variant="filled"
+                    value={Number(panel.SubTotal).toFixed(2) ?? ""} />
+                <StyleInput
+                    className="bg-black"
+                    disabled={true}
+                    label="Total"
+                    variant="filled"
+                    value={Number(panel.Total).toFixed(2) ?? ""} />
+            </InputComponent>
+        </Box>
     )
 }
 

@@ -16,4 +16,14 @@ class SubCategoria extends Model
         'Descripcion',
         'IdCategoria'
     ];
+
+    public function getCategoria()
+    {
+        return $this->hasOne(Categoria::class, "id", "IdCategoria");
+    }
+
+    public function getProductoAll()
+    {
+        return $this->hasMany(Producto::class, "IdSubCategoria", "id");
+    }
 }

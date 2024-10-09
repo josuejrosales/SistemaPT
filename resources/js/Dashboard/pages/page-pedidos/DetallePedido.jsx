@@ -1,4 +1,4 @@
-import { useEffect, useReducer, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import FormPedido from "../../forms/form-pedido";
 import TitleSection from "../../components/TitleSection";
 import { Box, IconButton } from "@mui/material";
@@ -14,9 +14,6 @@ import { convertToDecimal } from "../../utils/number";
 
 const panelInitial = { SubTotal: 0.0, Impuesto: 0.0, Total: 0.0 };
 
-function setFormDataDispatch(state, action) {
-    return { ...state, ...action };
-}
 function calcPanel(base, initial) {
     return base.reduce((acum, cell) => {
         const p = convertToDecimal(cell.PrecioUnitario) * convertToDecimal(cell.Cantidad);
@@ -29,22 +26,44 @@ function calcPanel(base, initial) {
 }
 
 
-function DetallePedido({ form, data = null, disabled }) {
+function DetallePedido({ form, model = null, disabled }) {
 
     const detalle_pedido = useHttp({ url: "/detalle_pedido" });
     const productos = useHttp({ url: "/productos" });
+
     const [table, setTable] = useState([]);
     const [panel, setPanel] = useState(panelInitial);
-    const [formData, setFormData] = useReducer(setFormDataDispatch, {});
+
+    const verifyTable = ({ id }) => table.some(prev => prev.id == id);
+
+    const saveTable = (value, counded) => {
+        try {
+            if (value.Stock < 1) throw new Error("Actualmente no tenemos stock de este producto.");
+            if (counded > value.Stock) throw new Error("No hay suficiente stock para esa cantidad.");
+            if (verifyTable(value)) throw new Error("Este producto ya esta agregado");
+
+            setTable(prev => [...prev, {
+                id: value.id,
+                PrecioUnitario: Number(value.Precio).toFixed(2) ?? 0,
+                Total: counded * (Number(value.Precio).toFixed(2) ?? 0),
+                Cantidad: counded,
+                get_producto: value
+            }])
+        } catch (error) {
+            toast.error(`${error.message}`);
+        }
+    }
 
     useEffect(() => {
         setPanel(calcPanel(table, panelInitial));
     }, [table]);
 
     useEffect(() => {
-        data ? detalle_pedido.startHttp({ url: `/detalle_pedido/${data.id}` })
+
+        model?.response ? detalle_pedido.startHttp({ url: `/detalle_pedido/${model.response.id}` })
             : detalle_pedido.setData([]);
-    }, [data]);
+
+    }, [model]);
 
     useEffect(() => {
         detalle_pedido.response && setTable(detalle_pedido.response);
@@ -61,24 +80,13 @@ function DetallePedido({ form, data = null, disabled }) {
                 name="table-producto"
                 value={JSON.stringify(table.map(item => ({ id: item.id, cound: item.Cantidad, price: item.PrecioUnitario })))} />
 
-            <FormPedido disabled={disabled} panel={panel} data={data} state={formData} dispatch={setFormData} />
+            <FormPedido disabled={disabled} panel={panel} state={model} />
 
             <TitleSection title={"Productos"}>
                 {disabled == false &&
                     <BuscarProducto
                         data={productos}
-                        onSelected={(value, counded) => {
-                            if (value.Stock < 1) toast.error("Actualmente no tenemos stock de este producto.");
-                            else {
-                                setTable(prev => [...prev, {
-                                    id: value.id,
-                                    PrecioUnitario: Number(value.Precio).toFixed(2) ?? 0,
-                                    Total: counded * (Number(value.Precio).toFixed(2) ?? 0),
-                                    Cantidad: counded,
-                                    get_producto: value
-                                }])
-                            }
-                        }} />
+                        onSelected={saveTable} />
                 }
             </TitleSection>
 

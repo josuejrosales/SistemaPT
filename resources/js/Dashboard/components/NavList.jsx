@@ -39,4 +39,5 @@ NavList.propTypes = {
     items: PropTypes.array.isRequired
 }
 
+export { StyleNavLink }
 export default NavList;

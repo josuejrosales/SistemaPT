@@ -56,4 +56,13 @@ class ProductoController extends Controller
         $sub_categorias = SubCategoria::all();
         return compact("categorias", "sub_categorias");
     }
+    public function destroy($id)
+    {
+        return StateOperation::process(function () use ($id) {
+            $producto = Producto::find($id);
+            $producto->delete();
+        }, function () {
+            return ["message" => "No se pudo eliminar el producto(verificar referencia existente con otros registros)"];
+        });
+    }
 }

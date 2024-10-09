@@ -13,9 +13,7 @@
 
 <body>
     <div id="root"></div>
-    <div id="modal-root"></div>
-
-    <a href="/login-close">cerrar cession</a>
+    {{-- <div id="modal-root"></div> --}}
 
     @if (session('auth_token'))
         <script>

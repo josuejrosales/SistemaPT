@@ -1,50 +1,50 @@
 import { Box, Divider, IconButton, Typography } from "@mui/material";
 import TitleSection from "../../components/TitleSection";
-import React, { useEffect, useRef, useState } from "react";
-import useHttp from "../../hooks/useHttp";
-import LOAD from "../../global/load";
-import TableComponent from "../../components/TableComponent";
-import MaskTable from "../../components/MaskTable";
-import { Cliente } from "../../class/Cliente";
-import ModalComponent from "../../components/ModalComponent";
 import getIcon from "../../components/Icons";
+import React, { useEffect, useRef, useState } from "react";
+import LOAD from "../../global/load";
+import useHttp from "../../hooks/useHttp";
+import ModalComponent from "../../components/ModalComponent";
 import LoadingButton from '@mui/lab/LoadingButton';
-import DetalleCliente from "./DetalleCliente";
-import VisibilityIcon from '@mui/icons-material/Visibility';
+import { FormComponent, InputComponent, StyleInput } from "../../components/FormComponent";
+import MaskTable from "../../components/MaskTable";
+import { MetodoPago } from "../../class/MetodoPago";
+import TableComponent from "../../components/TableComponent";
 import DeleteIcon from '@mui/icons-material/Delete';
+
 
 const modalInitial = { title: "", type: "", data: {}, actions: () => { } };
 
-function Clientes() {
+function TipoPago() {
 
     const form = useRef();
 
-    const clientes = useHttp({ url: "/clientes" });
-    const cliente = useHttp({ alert: true });
+    const tipoPagos = useHttp({ url: "/metodo_pago" });
+    const tipoPago = useHttp({ alert: true });
 
     const [modalOpen, setModalOpen] = useState(false);
     const [modal, setModal] = useState(modalInitial);
 
     useEffect(() => {
-        if (cliente.loading == LOAD.complete) {
+        if (tipoPago.loading == LOAD.complete) {
             setModalOpen(false);
-            clientes.startHttp();
+            tipoPagos.startHttp();
         }
-    }, [cliente.loading])
+    }, [tipoPago.loading])
 
     useEffect(() => {
-        clientes.startHttp();
+        tipoPagos.startHttp();
     }, [])
 
     return (
-        <Box gap={1} display={'flex'} flexDirection={"column"} overflow={'hidden'} width={"100%"}>
-            <TitleSection Icon={() => getIcon("ADD-PERSON")} title={"Clientes"}>
+        <Box gap={1} display={'flex'} flexDirection={"column"} overflow={'hidden'} flexGrow={1}>
+            <TitleSection Icon={() => getIcon("ADD-PAGO")} title={"Tipo de pagos"}>
                 <IconButton onClick={() => {
                     setModal({
-                        ...modal, title: "Registrar cliente", type: "ADD-PERSON", actions: (load) =>
+                        ...modal, title: "Registrar tipo de pago", type: "ADD-PAGO", actions: (load) =>
                             <LoadingButton
                                 loading={load == LOAD.progress}
-                                onClick={() => cliente.startHttp({ url: "/clientes", method: "POST", data: form.current })}>
+                                onClick={() => tipoPago.startHttp({ url: "/metodo_pago", method: "POST", data: form.current })}>
                                 Save
                             </LoadingButton>
                     })
@@ -56,24 +56,18 @@ function Clientes() {
 
             <Divider sx={{ mb: 2 }} />
 
-            {clientes.loading == LOAD.complete ?
+            {tipoPagos.loading == LOAD.complete ?
                 <TableComponent
-                    data={clientes.response}
-                    header={Cliente.getFillableTable()}
+                    data={tipoPagos.response}
+                    header={MetodoPago.getFillableTable()}
                     options={(selected) =>
                         <React.Fragment>
-                            <IconButton variant='contained' onClick={() => {
-                                setModal({ ...modal, title: "Detalle del cliente", type: "SHOW", data: selected })
-                                setModalOpen(true);
-                            }}>
-                                <VisibilityIcon />
-                            </IconButton>
                             <IconButton variant='contained' onClick={() => {
                                 setModal({
                                     ...modal, title: "Eliminar cliente", type: "DELETE", data: selected, actions: (load) =>
                                         <LoadingButton
                                             loading={load == LOAD.progress}
-                                            onClick={() => cliente.startHttp({ url: `/clientes/${selected.id}`, method: "DELETE" })}>
+                                            onClick={() => tipoPago.startHttp({ url: `/metodo_pago/${selected.id}`, method: "DELETE" })}>
                                             Eliminar
                                         </LoadingButton>
                                 })
@@ -85,39 +79,34 @@ function Clientes() {
                         </React.Fragment>
                     } />
 
-                : <MaskTable numColumns={Cliente.fillable.length} />}
+                : <MaskTable numColumns={MetodoPago.fillable.length} />}
 
 
             <ModalComponent
                 open={modalOpen}
                 onClose={() => setModalOpen(false)}
                 Title={() => <TitleSection title={modal.title} Icon={() => getIcon(modal.type)} />}
-                actions={() => modal.actions(cliente.loading)}
+                actions={() => modal.actions(tipoPago.loading)}
                 onExited={() => {
                     setModal(modalInitial);
-                    cliente.reset()
+                    tipoPago.reset()
                 }}>
 
                 {(() => {
                     switch (modal.type) {
-                        case "ADD-PERSON":
+                        case "ADD-PAGO":
                             return (
-                                <DetalleCliente
-                                    formRef={form}
-                                    model={cliente}
-                                />);
-                        case "SHOW":
-                            return (
-                                <DetalleCliente
-                                    formRef={form}
-                                    model={{ response: modal.data }}
-                                    disabled={true}
-                                />);
+                                <FormComponent _ref={form}>
+                                    <InputComponent>
+                                        <StyleInput label="Tipo de pago" name="Nombre" />
+                                    </InputComponent>
+                                </FormComponent>
+                            );
+
                         case "DELETE":
                             return (
                                 <React.Fragment>
                                     <Typography>Nombre : {modal.data?.Nombre ?? ""}</Typography>
-                                    <Typography>Correo : {modal.data?.Email ?? ""}</Typography>
                                 </React.Fragment>
                             );
                         default:
@@ -125,8 +114,8 @@ function Clientes() {
                     }
                 })()}
             </ModalComponent>
-        </Box >
+        </Box>
     );
 }
 
-export default Clientes;
+export default TipoPago;

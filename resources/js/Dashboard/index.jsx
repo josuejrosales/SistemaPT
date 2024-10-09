@@ -1,15 +1,17 @@
-import { createTheme, ThemeProvider } from '@mui/material';
+import { createTheme, Grid2, ThemeProvider } from '@mui/material';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import AppContextProvider from './contexts/appContext';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Dashboard from './pages/Dashboard';
-import Reportes from './pages/Reportes';
 import { Toaster } from 'react-hot-toast';
 import Productos from './pages/page-productos/Productos';
 import Clientes from './pages/page-clientes/Clientes';
 import Pedidos from './pages/page-pedidos/Pedidos';
-
+import Home from './pages/page-home/Home';
+import TipoPago from './pages/page-mantenimiento/TipoPago';
+import Categoria from './pages/page-mantenimiento/Categoria';
+import SubCategoria from './pages/page-mantenimiento/SubCategoria';
 
 const theme = createTheme({
     components: {
@@ -30,11 +32,17 @@ function App() {
                 <AppContextProvider>
                     <Routes>
                         <Route path="/dashboard/*" element={<Dashboard />}>
-                            <Route path="home" element={"home"} />
-                            <Route path="reportes" element={<Reportes />} />
+                            <Route path="home" element={<Home />} />
                             <Route path="productos" element={<Productos />} />
                             <Route path="clientes" element={<Clientes />} />
                             <Route path="pedidos" element={<Pedidos />} />
+                            <Route path="mantenimiento" element={
+                                <Grid2 container spacing={5}>
+                                    <TipoPago />
+                                    <Categoria />
+                                    <SubCategoria />
+                                </Grid2>
+                            } />
                         </Route>
                     </Routes>
                 </AppContextProvider>

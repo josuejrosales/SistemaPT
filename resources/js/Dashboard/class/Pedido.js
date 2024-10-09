@@ -1,6 +1,9 @@
 import { convertDateSimple } from "../utils/date";
 
 export class Pedido {
+
+    static fillable = ["Estado", "Total", "SubTotal", "Impuesto", "IdMetodoPago", "IdCliente", "created_at"];
+
     static getFillable() {
         return [
             { name: 'Estado', label: 'Estado' },
@@ -13,5 +16,14 @@ export class Pedido {
             { name: 'created_at', search: 'created_at', label: 'Fecha de registro', resolve: convertDateSimple },
 
         ];
+    }
+    static filterParams(data, value = null) {
+        const final = {};
+        (value ?? Pedido.fillable).forEach((param) => {
+            if (data.hasOwnProperty(param)) {
+                final[param] = data[param];
+            }
+        });
+        return final;
     }
 }

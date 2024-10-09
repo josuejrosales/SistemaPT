@@ -29,7 +29,7 @@ class ClienteController extends Controller
     {
         return $this->getClientesEloquent()->get();
     }
-    public function Store(Request $request)
+    public function store(Request $request)
     {
         $validate = $this->validate($request, []);
 
@@ -38,6 +38,15 @@ class ClienteController extends Controller
         }
         return StateOperation::process(function () use ($request) {
             Cliente::create([...$request->only(Cliente::make()->getFillable())]);
+        });
+    }
+    public function destroy($id)
+    {
+        return StateOperation::process(function () use ($id) {
+            $cliente = Cliente::find($id);
+            $cliente->delete();
+        }, function () {
+            return ["message" => "No se pudo eliminar el cliente(verificar referencia existente con otros registros)"];
         });
     }
 }

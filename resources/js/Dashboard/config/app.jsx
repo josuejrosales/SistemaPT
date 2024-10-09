@@ -4,6 +4,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import PersonIcon from '@mui/icons-material/Person';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import ConstructionIcon from '@mui/icons-material/Construction';
 
 const BASE_ADMIN = "/dashboard";
 
@@ -23,19 +24,19 @@ const NAVIGATION = [
         icon: <LocalShippingIcon />,
     },
     {
-        segment: "/clientes",
-        title: 'Clientes',
-        icon: <PersonIcon />,
-    },
-    {
         segment: "/productos",
         title: 'Productos',
         icon: <ShoppingCartIcon />,
     },
     {
-        segment: "/reportes",
-        title: 'Reportes',
-        icon: <BarChartIcon />,
+        segment: "/clientes",
+        title: 'Clientes',
+        icon: <PersonIcon />,
+    },
+    {
+        segment: "/mantenimiento",
+        title: 'Mantenimiento',
+        icon: <ConstructionIcon />,
     },
 ];
 

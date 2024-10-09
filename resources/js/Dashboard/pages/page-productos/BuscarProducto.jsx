@@ -7,7 +7,7 @@ import ModalComponent from '../../components/ModalComponent';
 import TitleSection from '../../components/TitleSection';
 import getIcon from '../../components/Icons';
 import { Box, Button, Typography } from '@mui/material';
-import { InputComponent } from '../../components/FormComponent';
+import { InputComponent, StyleInput } from '../../components/FormComponent';
 import CardComponent from '../../components/CardComponent';
 
 const modalInitial = { title: "" };
@@ -55,13 +55,14 @@ function BuscarProducto({ data, onSelected = () => { } }) {
                         renderInput={(params) => <TextField {...params} label="Nombre del producto" />}
                     />
 
-                    <InputComponent
-                        value={counted}
-                        onChange={v => setCounted(v)}
-                        type='number'
-                        maxWidth="100px"
-                        name="ivg"
-                        label={"Cantidad"} />
+                    <InputComponent props={{ maxWidth: "100px" }}>
+                        <StyleInput
+                            type='number'
+                            label='Cantidad'
+                            value={counted}
+                            onChange={({ target }) => target.value > 0 && setCounted(target.value)}
+                        />
+                    </InputComponent>
                 </Box>
                 {value &&
                     <CardComponent imgUrl={value.Photo}>
