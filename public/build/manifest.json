@@ -1,0 +1,24 @@
+{
+  "_MaskCard-ByEvUYir.js": {
+    "file": "assets/MaskCard-ByEvUYir.js",
+    "name": "MaskCard"
+  },
+  "resources/js/app_dashboard.js": {
+    "file": "assets/app_dashboard-DeyPO1Xn.js",
+    "name": "app_dashboard",
+    "src": "resources/js/app_dashboard.js",
+    "isEntry": true,
+    "imports": [
+      "_MaskCard-ByEvUYir.js"
+    ]
+  },
+  "resources/js/app_welcome.js": {
+    "file": "assets/app_welcome-YN2GNcFP.js",
+    "name": "app_welcome",
+    "src": "resources/js/app_welcome.js",
+    "isEntry": true,
+    "imports": [
+      "_MaskCard-ByEvUYir.js"
+    ]
+  }
+}
